@@ -226,6 +226,14 @@ public:
            hasShortForwardBranchIALU();
   }
 
+  // Lower selects to PseudoCCMOVGPR, expanded to a branch over a move after
+  // register allocation. Part of the short forward branch optimization, and
+  // available on its own for cores that want the late expansion without the
+  // rest of it.
+  bool useLateSelectExpansion() const {
+    return hasShortForwardBranchIALU() || hasLateSelectExpansion();
+  }
+
   bool hasShlAdd(int64_t ShAmt) const {
     if (ShAmt <= 0)
       return false;

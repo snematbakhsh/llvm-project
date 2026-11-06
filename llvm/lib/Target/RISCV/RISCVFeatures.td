@@ -2243,6 +2243,23 @@ def TuneShortForwardBranchILoad
           [TuneShortForwardBranchIALU]>;
 def HasShortForwardBranchILoad : Predicate<"Subtarget->hasShortForwardBranchILoad()">;
 
+// The generic lowering of a select that has no branchless form splits the
+// block at instruction selection. The short forward branch optimization
+// instead keeps the select as PseudoCCMOVGPR until after register allocation,
+// folds a single-use ALU op under it, and expands it to a branch over that op
+// there. This tune enables only that part, for a core where a branch over a
+// move is a real branch: the branchless select lowerings stay, and nothing
+// else of the short forward branch optimization is enabled.
+def TuneLateSelectExpansion
+    : RISCVSimpleTuneFeature<"late-select-expansion", "HasLateSelectExpansion",
+                             "true",
+                             "Expand selects to a branch over a move after "
+                             "register allocation">;
+def UseLateSelectExpansion
+    : Predicate<"Subtarget->useLateSelectExpansion()">;
+def NoLateSelectExpansion
+    : Predicate<"!Subtarget->useLateSelectExpansion()">;
+
 // Some subtargets require a S2V transfer buffer to move scalars into vectors.
 // FIXME: Forming .vx/.vf/.wx/.wf can reduce register pressure.
 def TuneNoSinkSplatOperands
