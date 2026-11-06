@@ -397,7 +397,7 @@ Makes programs 10x faster by doing Special New Thing.
   throughput.
 * Removed X5 from the preserve_most register list.
 * Added `-mcpu=chipsalliance-veer-eh1` for the CHIPS Alliance VeeR EH1
-  processor.
+  processor, with a scheduling model.
 
 ### Changes to the WebAssembly Backend
 
